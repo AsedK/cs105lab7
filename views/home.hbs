@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="navbar">Chat room</div>
+    <div class="header-container">
+        <h1>Home</h1>
+        <p>This is the {{ title }} page</p>
+    </div>
+    <div class="container">
+        <form action="/create" method="post">
+            <p>Click the button below to create a new room with a unique ID:</p>
+            <button type="submit">Create New Room</button>
+        </form>
+        <h2>Existing Chatrooms</h2>
+        <ul>
+            {{#each roomNames}}
+            <li><a href="/{{this}}">{{this}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+    
+    <script>
+        function fillRoomName(roomName) {
+            document.getElementById('roomNameInput').value = roomName;
+        }
+    </script>
+</body>
+</html>

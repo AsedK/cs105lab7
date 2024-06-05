@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <h1>Room ID: {{ roomName }}</h1>
+ 
+    <div id="messages" class="chatroom"></div>
+    <form id="message-form">
+        <input type="text" id="nickname" placeholder="Enter your nickname" required>
+        <input type="text" id="message" placeholder="Enter your message" required>
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        async function fetchMessages() {
+            const response = await fetch('/{{roomName}}/messages');
+            const messages = await response.json();
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = '';
+            messages.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.className = 'message';
+                messageElement.innerHTML = `<span class="nickname">${msg.nickname}</span>: <span class="text">${msg.body}</span> <span class="datetime">(${new Date(msg.datetime).toLocaleString()})</span>`;
+                messagesDiv.appendChild(messageElement);
+            });
+        }
+
+        document.getElementById('message-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nickname = document.getElementById('nickname').value;
+            const message = document.getElementById('message').value;
+            await fetch(`/{{roomName}}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nickname, body: message })
+            });
+            fetchMessages();
+        });
+
+        setInterval(fetchMessages, 3000);
+        fetchMessages();
+    </script>
+</body>
+</html>
